@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VinoPredict | Modern Enology</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Outfit:wght@200;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">🍷</span>
+                <h1>VinoPredict</h1>
+            </div>
+            <nav class="side-nav">
+                <button class="nav-btn active" data-tab="predictor">
+                    <span class="icon">📊</span> Analysis
+                </button>
+                <button class="nav-btn" data-tab="vault">
+                    <span class="icon">📜</span> Wine Vault
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Engine v2.4</p>
+                <p>Red Wine Model</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="background-blob blob-1"></div>
+            <div class="background-blob blob-2"></div>
+
+            <div id="predictor-tab" class="tab-content">
+                <div class="content-header">
+                    <div class="header-with-actions">
+                        <div>
+                            <h2>Chemical Profile</h2>
+                            <p>Enter chemical parameters to view wine profile.</p>
+                        </div>
+                        <button id="random-sample-btn" class="secondary-button">🎲 Random Sample</button>
+                    </div>
+                </div>
+
+                <div class="modern-grid">
+                    <section class="predictor-form card">
+                        <form id="prediction-form">
+                            <div class="input-sections">
+                                <div class="section-group">
+                                    <h3>Acidity & pH</h3>
+                                    <div class="form-row">
+                                        <div class="input-field">
+                                            <label>Fixed Acidity</label>
+                                            <input type="number" id="fixed-acidity" step="0.1" value="8.3">
+                                        </div>
+                                        <div class="input-field">
+                                            <label>Volatile Acidity</label>
+                                            <input type="number" id="volatile-acidity" step="0.01" value="0.52">
+                                        </div>
+                                        <div class="input-field">
+                                            <label>pH Level</label>
+                                            <input type="number" id="ph" step="0.01" value="3.31">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-group">
+                                    <h3>Composition</h3>
+                                    <div class="form-row">
+                                        <div class="input-field">
+                                            <label>Residual Sugar</label>
+                                            <input type="number" id="residual-sugar" step="0.1" value="2.5">
+                                        </div>
+                                        <div class="input-field">
+                                            <label>Chlorides</label>
+                                            <input type="number" id="chlorides" step="0.001" value="0.087">
+                                        </div>
+                                        <div class="input-field">
+                                            <label>Citric Acid</label>
+                                            <input type="number" id="citric-acid" step="0.01" value="0.27">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-group">
+                                    <h3>Sulfur & Density</h3>
+                                    <div class="form-row">
+                                        <div class="input-field">
+                                            <label>Free SO₂</label>
+                                            <input type="number" id="free-sulfur-dioxide" step="1" value="15">
+                                        </div>
+                                        <div class="input-field">
+                                            <label>Total SO₂</label>
+                                            <input type="number" id="total-sulfur-dioxide" step="1" value="46">
+                                        </div>
+                                        <div class="input-field">
+                                            <label>Density</label>
+                                            <input type="number" id="density" step="0.0001" value="0.9967">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-group primary-inputs">
+                                    <div class="form-row">
+                                        <div class="input-field highlight">
+                                            <label>Sulphates</label>
+                                            <input type="number" id="sulphates" step="0.01" value="0.65">
+                                        </div>
+                                        <div class="input-field highlight">
+                                            <label>Alcohol %</label>
+                                            <input type="number" id="alcohol" step="0.1" value="10.4">
+                                        </div>
+                                    </div>
+                                    <div class="form-actions-full">
+                                        <button type="button" id="run-assessment-btn" class="cta-button">
+                                            ✨ Run AI Assessment
+                                        </button>
+                                    </div>
+                                </div>
+                        </form>
+                    </section>
+
+                    <section id="result-section" class="prediction-result card hidden">
+                        <div class="result-header">
+                            <h3>AI Analysis Result</h3>
+                            <div class="status-badge" id="quality-status">Premium</div>
+                        </div>
+
+                        <div class="probability-score">
+                            <svg class="progress-ring" width="200" height="200">
+                                <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.05)"
+                                    stroke-width="8" fill="transparent" r="90" cx="100" cy="100" />
+                                <circle id="progress-circle" class="progress-ring__circle" stroke="var(--gold)"
+                                    stroke-width="8" stroke-dasharray="565.48" stroke-dashoffset="565.48"
+                                    fill="transparent" r="90" cx="100" cy="100" />
+                            </svg>
+                            <div class="score-text"><span id="score-value">0</span>%</div>
+                        </div>
+
+                        <div class="analysis-details">
+                            <p class="analysis-summary" id="analysis-text">
+                                Analyzing chemical components...
+                            </p>
+                            <div class="key-drivers">
+                                <div class="driver">
+                                    <span class="driver-label">Alcohol Depth</span>
+                                    <div class="driver-bar">
+                                        <div id="bar-alcohol" class="bar-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="driver">
+                                    <span class="driver-label">Acidity Balance</span>
+                                    <div class="driver-bar">
+                                        <div id="bar-acidity" class="bar-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div id="vault-tab" class="tab-content hidden">
+                <div class="content-header">
+                    <div class="header-with-actions">
+                        <div>
+                            <h2>Wine Vault</h2>
+                            <p>Complete historical dataset records from the UCI Enology Repository.</p>
+                        </div>
+                        <button id="toggle-add-form" class="secondary-button">➕ Add Record</button>
+                    </div>
+                </div>
+
+                <div id="add-record-panel" class="card hidden mb-2">
+                    <h3>Add New Cellar Entry</h3>
+                    <form id="new-record-form" class="compact-form">
+                        <div class="form-row-compact">
+                            <input type="number" id="new-fa" step="0.1" placeholder="F. Acidity" required>
+                            <input type="number" id="new-va" step="0.01" placeholder="V. Acidity" required>
+                            <input type="number" id="new-ca" step="0.01" placeholder="Citric" required>
+                            <input type="number" id="new-rs" step="0.1" placeholder="Sugar" required>
+                            <input type="number" id="new-ch" step="0.001" placeholder="Chlorides" required>
+                            <input type="number" id="new-fs" step="1" placeholder="Free SO2" required>
+                            <input type="number" id="new-ts" step="1" placeholder="Total SO2" required>
+                            <input type="number" id="new-de" step="0.0001" placeholder="Density" required>
+                            <input type="number" id="new-ph" step="0.01" placeholder="pH" required>
+                            <input type="number" id="new-su" step="0.01" placeholder="Sulphates" required>
+                            <input type="number" id="new-al" step="0.1" placeholder="Alcohol" required>
+                            <input type="number" id="new-qu" step="1" placeholder="Quality (0-10)" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="cta-button mini">Save to Vault</button>
+                            <button type="button" id="cancel-add" class="text-button">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="vault-container card">
+                    <div class="table-scroll">
+                        <table id="dataset-table">
+                            <thead>
+                                <tr id="table-head"></tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
